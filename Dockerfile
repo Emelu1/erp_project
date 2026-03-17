@@ -31,7 +31,8 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# First try with composer.lock, then fallback to update if needed
+RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction || composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction
 
 # Install Node dependencies and build
 RUN npm install && npm run build
