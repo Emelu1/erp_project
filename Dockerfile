@@ -35,8 +35,8 @@ COPY . /var/www/html
 RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction || composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction
 
 # Install Node dependencies and build
-# Skip TypeScript checking for production build
-RUN npm cache clean --force && npm install --legacy-peer-deps --no-audit && npx vite build
+# Install glob explicitly as it's required by vite.config.js
+RUN npm cache clean --force && npm install --legacy-peer-deps --no-audit && npm install glob --save-dev && npm run build
 
 # Set permissions
 RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
