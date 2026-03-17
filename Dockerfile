@@ -35,7 +35,7 @@ COPY . /var/www/html
 RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction || composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction
 
 # Install Node dependencies and build
-RUN npm install && npm run build
+RUN npm cache clean --force && npm install --legacy-peer-deps --no-audit && npm run build
 
 # Set permissions
 RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
