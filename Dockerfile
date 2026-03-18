@@ -53,6 +53,9 @@ RUN chown -R www-data:www-data /var/www/html
 # Run migrations during build
 RUN php artisan config:clear && php artisan migrate --force || echo "Migration completed or failed"
 
+# Create a startup script that runs migrations
+RUN echo '#!/bin/bash\nphp artisan config:clear\nphp artisan migrate --force\napache2-foreground' > /start.sh && chmod +x /start.sh
+
 # Configure Apache to listen on port 10000
 RUN echo "Listen 10000" >> /etc/apache2/ports.conf
 
@@ -63,5 +66,5 @@ EXPOSE 10000
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 
-# Start Apache on port 10000
-CMD ["apache2-foreground"]
+# Start the startup script
+CMD ["/start.sh"]
