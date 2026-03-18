@@ -53,6 +53,9 @@ RUN chown -R www-data:www-data /var/www/html
 # Run migrations during build
 RUN php artisan config:clear && php artisan migrate --force || echo "Migration completed or failed"
 
+# Configure Apache to listen on port 10000
+RUN echo "Listen 10000" >> /etc/apache2/ports.conf
+
 # Expose port 10000
 EXPOSE 10000
 
@@ -60,5 +63,5 @@ EXPOSE 10000
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 
-# Start Apache
+# Start Apache on port 10000
 CMD ["apache2-foreground"]
