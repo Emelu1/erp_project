@@ -22,7 +22,10 @@ class HomeController extends Controller
 
     private function superAdminDashboard()
     {
-        $orderData = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as count, SUM(price) as payments')
+        // Use database-agnostic approach for extracting month
+        $orderData = Order::selectRaw(
+            'EXTRACT(MONTH FROM created_at)::int as month, COUNT(*) as count, SUM(price) as payments'
+        )
             ->whereYear('created_at', now()->year)
             ->groupBy('month')
             ->orderBy('month')
